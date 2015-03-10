@@ -1,0 +1,24 @@
+Script started on 2015年03月10日 (週二) 17時33分23秒
+]0;F74036221@2015cpp: ~F74036221@2015cpp:~$ whoami; pwd
+F74036221
+/home/F74036221
+]0;F74036221@2015cpp: ~F74036221@2015cpp:~$ git config ‐l[1Pl[1Pl[1Pl l-l l
+git: 'confi' is not a git command. See 'git --help'.
+
+Did you mean this?
+	config
+]0;F74036221@2015cpp: ~F74036221@2015cpp:~$ git confi - l[1Pl[1P-l
+git: 'confi-l' is not a git command. See 'git --help'.
+]0;F74036221@2015cpp: ~F74036221@2015cpp:~$ git confi-lg-l
+git: 'config-l' is not a git command. See 'git --help'.
+]0;F74036221@2015cpp: ~F74036221@2015cpp:~$ git config-l -l
+]0;F74036221@2015cpp: ~F74036221@2015cpp:~$ git clone https://github.com/<your github account>/lab1.git
+bash: your: No such file or directory
+]0;F74036221@2015cpp: ~F74036221@2015cpp:~$ git clone https://github.com/<your github account>/lab1.git[C[C[C[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git[1P/lab1.git>/lab1.gitA>/lab1.gitl>/lab1.giti>/lab1.gitc>/lab1.gite>/lab1.git8>/lab1.git5>/lab1.git0>/lab1.git7>/lab1.git1>/lab1.git8>/lab1.git
+bash: Alice850718: No such file or directory
+]0;F74036221@2015cpp: ~F74036221@2015cpp:~$ git clone https://github.com/<Alice850718>/lab1.git[1P/lab1.git[C[1PAlice850718/lab1.git
+Cloning into 'lab1'...
+warning: You appear to have cloned an empty repository.
+]0;F74036221@2015cpp: ~F74036221@2015cpp:~$ exit
+
+Script done on 2015年03月10日 (週二) 17時36分32秒
