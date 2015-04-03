@@ -7,7 +7,7 @@ using namespace std;
 class Lab3_A
 {
 		public:
-		int Count(int cow_weight[], int n, int sum);
+		int Count(vector<int> &cow_weight, int n, int sum);
 		private:
 		static int n;
 		int sum;

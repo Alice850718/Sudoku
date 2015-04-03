@@ -25,16 +25,15 @@ int main()
 		//讀取檔案
 		//讀入牛隻數(n)
 		fin >> n;
-//		vector<int> cow_weight(8);
-		int cow_weight[8];
+		vector<int> cow_weight(n);
 		for(i = 0; i < n; i ++)
 		{
-				fin >> cow_weight[ i ]; 
+				fin >> cow_weight.at( i ); 
 		}
 		//使用物件
 		Lab3_A a;
 		a.Count(cow_weight, n, sum);
-		cout << a.Count(cow_weight, n, sum) << endl;
+		fout << a.Count(cow_weight, n, sum) << endl;
 		fin.close();
 		fout.close();
 }
