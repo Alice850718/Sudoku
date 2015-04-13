@@ -1,1 +1,37 @@
-make
+For question A :
+				The compile way: make
+For question B :
+
+			sort = n log n;
+			insertion sort = n^2;
+
+			size = 1000;
+			
+			sort(): 0 seconds
+			v1/v2 are different.
+			insertion_sort(): 0.01 seconds
+			v1/v2 are the same.
+			------------------------------------------------------------------------
+			size = 10000;
+
+			sort(): 0 seconds
+			v1/v2 are different.
+			insertion_sort(): 1.28 seconds
+			v1/v2 are the same.
+			------------------------------------------------------------------------
+			size = 100000;
+			
+			sort(): 0.04 seconds
+			v1/v2 are different.
+			insertion_sort(): 128.5 seconds
+			v1/v2 are the same.
+			------------------------------------------------------------------------
+			size = 1000000;
+
+			sort(): 0.5 seconds
+			v1/v2 are different.
+			insertion_sort(): 12808.4 seconds
+			v1/v2 are the same.
+			
+			n log n < n^2
+			故sort所需時間一定比insertion sort所需時間長
