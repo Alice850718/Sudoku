@@ -39,7 +39,7 @@ void Sudoku::GiveQuestion()
 		}
 */
 		//預設數獨
-		int i, j;		//幫助跑迴圈
+		int i, j, m = 0;		//幫助跑迴圈
 		int o = -1;
 		int num[ 9 ];		//儲存隨機亂數
 		srand((unsigned)time(NULL));		//設定亂數種子
@@ -100,19 +100,27 @@ void Sudoku::GiveQuestion()
 				for(j = 0; j < 12; j ++)
 				{
 						temp_arr[ i ][ j ] = Question_arr[ i+r1 ][ j ];
-						if(temp_arr[ i ][ num[ i ] ] != -1)
-						{
-								temp_arr[ i ][ num[ i ] ] = 0;
-						}
-						else
-						{
-								temp_arr[ i ][ num[ i+1 ] ] = 0;
-						}
-						temp_arr[ i+3 ][ j ] = Question_arr[ i+r2 ][ j ];
+				 		temp_arr[ i+3 ][ j ] = Question_arr[ i+r2 ][ j ];
 						temp_arr[ i+6 ][ j ] = Question_arr[ i+r3 ][ j ];
 						temp_arr[ i+9 ][ j ] = Question_arr[ i+r4 ][ j ];
 				}
+				while(temp_arr[ i ][ num[ m ]] == -1)		//前三列隨機抓空格(避免抓到-1)
+				{
+						m ++;
+				}
+				temp_arr[ i ][ num [ m ]] = 0;
+				m ++;
+
+				while(temp_arr[ i+3 ][ num[ m ]] == -1)		//下三列隨機抓空格(避免抓到-1)
+				{
+						m ++;
+				}
+				temp_arr[ i+3 ][ num [ m ]] = 0;
+				m ++;
+
 		}
+		m = 0;
+
 		for(i = 0; i < 3; i ++)		//每大行隨機排列
 		{
 				for(j = 0; j < 12; j ++)
@@ -122,6 +130,19 @@ void Sudoku::GiveQuestion()
 						Question_arr[ j ][ i+6 ] = temp_arr[ j ][ i+r4 ];
 						Question_arr[ j ][ i+9 ] = temp_arr[ j ][ i+r1 ];
 				}
+				while(Question_arr[ i+6 ][ num[ m ]] == -1)		//再三列隨機抓空格(避免抓到-1)
+				{
+						m ++;
+				}
+				Question_arr[ i+6 ][ num [ m ]] = 0;
+				m ++;
+
+				while(Question_arr[ i+9 ][ num[ m ]] == -1)		//後三列隨機抓空格(避免抓到-1)
+				{
+						m ++;
+				}
+				Question_arr[ i+9 ][ num [ m ]] = 0;
+				m ++;
 		}
 
 /*		int ax = 0;		//ax,bx,cx,dx和-1的前面座標位置有關
@@ -133,7 +154,7 @@ void Sudoku::GiveQuestion()
 		int cy = r[ cx ];
 		int dy = r[ dx ];
 */
-		for(i = 0; i < 3; i ++)		//產生不重複隨機亂數(輔助排列)
+/*		for(i = 0; i < 3; i ++)		//產生不重複隨機亂數(輔助排列)
 		{
 				r[ i ] = rand()%3;
 				for(j = 0; j < i; j ++)
@@ -145,6 +166,7 @@ void Sudoku::GiveQuestion()
 						}
 				}
 		}
+*/
 /*		int x = r[ 0 ];		//x,y,z為0~2不重複亂數(輔助排列)
 		int y = r[ 1 ];
 		int z = r[ 2 ];
