@@ -1,47 +1,16 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
+#include <vector>
 #include "Sudoku.h"
 using namespace std;
 
-/*
-Sudoku::Sudoku()
-{
-		for(int i = 0; i < sudokuSize; ++ i)
-		{
-				for(int j = 0; j < sudokuSize; ++ j)
-				{
-						map[ i ][ j ] = 0;
-				}
-		}
-}
-
-
-Sudoku::Sudoku(const int init_map[])
-{
-		for(int i = 0; i < sudokuSize; ++ i)
-		{
-				for(int j = 0; j < sudokuSize; ++ j)
-				{
-						map[ i ][ j ] = init_map[ i ][ j ];
-				}
-		}
-}
-*/
 void Sudoku::GiveQuestion()
 {
-/*		for(int i = 0; i < sudokuSize; ++ i)
-		{
-				for(int j = 0; j < sudokuSize; ++ j)
-				{
-						map[ i ][ j ] = set_map[ i ][ j ];
-				}
-		}
-*/
-		//預設數獨
-		int i, j, m = 0;		//幫助跑迴圈
+		int i, j, m, n = 0;		//幫助跑迴圈
 		int o = -1;
 		int num[ 9 ];		//儲存隨機亂數
+		int set[ 9 ] = { 0 };		//計算歸零幾個
 		srand((unsigned)time(NULL));		//設定亂數種子
 		for(i = 0; i < 9; i ++)		//產生1~9的數字
 		{
@@ -55,6 +24,7 @@ void Sudoku::GiveQuestion()
 						}
 				}
 		}
+		//將亂數值輸入數獨
 		int a = num[ 0 ];
 		int b = num[ 1 ];
 		int c = num[ 2 ];
@@ -65,11 +35,11 @@ void Sudoku::GiveQuestion()
 		int h = num[ 7 ];
 		int k = num[ 8 ];
 		//預設數獨
-		int Question_arr[ 12 ][ 12 ] = { {e,c,k,o,o,o,a,d,g,f,k,c},
-								     	 {f,a,g,o,o,o,b,e,h,d,g,a},
-								    	 {d,b,h,o,o,o,c,f,k,e,h,b},
-							 	    	 {a,h,d,k,c,f,o,o,o,g,b,f},
-								    	 {b,k,e,g,a,d,o,o,o,h,c,e},
+		int Question_arr[ 12 ][ 12 ] = { {e,c,k,o,o,o,a,d,g,f,h,b},
+								     	 {f,a,g,o,o,o,b,e,h,d,k,c},
+								    	 {d,b,h,o,o,o,c,f,k,e,g,a},
+							 	    	 {a,h,d,k,c,f,o,o,o,g,b,e},
+								    	 {b,k,e,g,a,d,o,o,o,h,c,f},
 								    	 {c,g,f,h,b,e,o,o,o,k,a,d},
 								    	 {o,o,o,e,g,b,d,k,c,a,f,h},
 								    	 {o,o,o,f,h,c,e,g,a,b,d,k},
@@ -90,212 +60,188 @@ void Sudoku::GiveQuestion()
 						}
 				}
 		}
+		//為0,3,6,9之不重複亂數
 		int r1 = r[ 0 ];
 		int r2 = r[ 1 ];
 		int r3 = r[ 2 ];
-		int r4 = r[ 3 ];		//為0,3,6,9之不重複亂數
-		int temp_arr[ 12 ][ 12 ] = { 0 };
-		for(i = 0; i < 3; i ++)		//每大列隨機排列
+		int r4 = r[ 3 ];
+		int temp_arr[ 12 ][ 12 ] = { 0 };		//暫存數獨(幫助變換)
+		for(i = 0; i < 3; i ++)
 		{
-				for(j = 0; j < 12; j ++)
+				for(j = 0; j < 12; j ++)		//每大列隨機排列
 				{
 						temp_arr[ i ][ j ] = Question_arr[ i+r1 ][ j ];
 				 		temp_arr[ i+3 ][ j ] = Question_arr[ i+r2 ][ j ];
 						temp_arr[ i+6 ][ j ] = Question_arr[ i+r3 ][ j ];
 						temp_arr[ i+9 ][ j ] = Question_arr[ i+r4 ][ j ];
 				}
-				while(temp_arr[ i ][ num[ m ]] == -1)		//前三列隨機抓空格(避免抓到-1)
-				{
-						m ++;
-				}
-				temp_arr[ i ][ num [ m ]] = 0;
-				m ++;
-
-				while(temp_arr[ i+3 ][ num[ m ]] == -1)		//下三列隨機抓空格(避免抓到-1)
-				{
-						m ++;
-				}
-				temp_arr[ i+3 ][ num [ m ]] = 0;
-				m ++;
-
 		}
+		
 		m = 0;
 
-		for(i = 0; i < 3; i ++)		//每大行隨機排列
+		for(i = 0; i < 3; i ++)
 		{
-				for(j = 0; j < 12; j ++)
+				for(j = 0; j < 12; j ++)		//每大行隨機排列
 				{
 						Question_arr[ j ][ i ] = temp_arr[ j ][ i+r2 ];
 						Question_arr[ j ][ i+3 ] = temp_arr[ j ][ i+r3 ];
 						Question_arr[ j ][ i+6 ] = temp_arr[ j ][ i+r4 ];
 						Question_arr[ j ][ i+9 ] = temp_arr[ j ][ i+r1 ];
 				}
-				while(Question_arr[ i+6 ][ num[ m ]] == -1)		//再三列隨機抓空格(避免抓到-1)
-				{
-						m ++;
-				}
-				Question_arr[ i+6 ][ num [ m ]] = 0;
-				m ++;
-
-				while(Question_arr[ i+9 ][ num[ m ]] == -1)		//後三列隨機抓空格(避免抓到-1)
-				{
-						m ++;
-				}
-				Question_arr[ i+9 ][ num [ m ]] = 0;
-				m ++;
 		}
 
-/*		int ax = 0;		//ax,bx,cx,dx和-1的前面座標位置有關
-		int bx = 1;
-		int cx = 2;
-		int dx = 3;
-		int ay = r[ ax ];		//ay,by,cy,dy和-1的後面座標位置有關
-		int by = r[ bx ];
-		int cy = r[ cx ];
-		int dy = r[ dx ];
-*/
-/*		for(i = 0; i < 3; i ++)		//產生不重複隨機亂數(輔助排列)
+		
+		int seti[ 12 ] = { 0 };
+		int setj[ 12 ] = { 0 };
+
+		for(i = 0; i < 12; i ++)
 		{
-				r[ i ] = rand()%3;
-				for(j = 0; j < i; j ++)
+				for(j = 0; j < 12; j ++)
 				{
-						if(r[ i ] == r[ j ])
+						for(m = 1; m < 10; m ++)
 						{
-								i --;
-								break;
+								if(Question_arr[ i ][ j ] == m && set[ m ] < m && seti[ i ] < 2 && setj[ j ] < 2)
+								{
+										Question_arr[ i ][ j ] = 0;
+										set[ m ] ++;
+										seti[ i ] ++;
+										setj[ j ] ++;
+								}
 						}
 				}
 		}
-*/
-/*		int x = r[ 0 ];		//x,y,z為0~2不重複亂數(輔助排列)
-		int y = r[ 1 ];
-		int z = r[ 2 ];
-
-		Question_arr[ ax*3 ][ dy ] = 1;
-		Question_arr[ ax*3 + 1 ][ by ] = 1;
-		Question_arr[ ax*3 + 2 ][ cy ] = 1;
-		Question_arr[ cx*3 ][ by + 1 ] = 1;
-		Question_arr[ dx*3 ][ by + 2 ] = 1;
 
 
-		//把-1放入12x12數獨裡
-		for(i = ax*3; i < (ax+1)*3; i ++)
-		{
-				for(j = ay; j < ay+3; j ++)
-				{
-						Question_arr[ i ][ j ] = -1;
-				}
-		}
-		for(i = bx*3; i < (bx+1)*3; i ++)
-		{
-				for(j = by; j < by+3; j ++)
-				{
-						Question_arr[ i ][ j ] = -1;
-				}
-		}
-		for(i = cx*3; i < (cx+1)*3; i ++)
-		{
-				for(j = cy; j < cy+3; j ++)
-				{
-						Question_arr[ i ][ j ] = -1;
-				}
-		}
-
-		for(i = dx*3; i < (dx+1)*3; i ++)
-		{
-				for(j = dy; j < dy+3; j ++)
-				{
-						Question_arr[ i ][ j ] = -1;
-				}
-		}
-*/
 		//把題目印出來
 		for(i = 0; i < 12; i ++)
 		{
 				for(j = 0; j < 12; j++)
 						{
-								if(Question_arr[ i ][ j ] != 0)
-								{
-										cout << setw(3) << Question_arr[ i ][ j ];
-								}
-								else
-								{
-										cout << setw(3) << " ";
-								}
+								cout << setw(3) << Question_arr[ i ][ j ];
 						}
 						cout << endl;
 		}
-
-}
-/*
-int Sudoku::getElement(int index)
-{
-		return map[index];
 }
 
-bool Sudoku::checkUnity(int arr[])
+
+void Sudoku::ReadIn()
 {
-		int arr_unity[ 9 ];		//counters
-		for(int i = 0; i < 9; ++ i)
+		for(i = 0; i < 144; i ++)
 		{
-				arr_unity[ i ] = 0;		//initialize
+				cin >> Read[ i ];
 		}
-		for(int i = 0; i < 9; ++ i)
-		{
-				++ arr_unity[ arr[ i ] - 1 ];		//all element
-		}
-		for(int i = 0; i < 9; ++ i)
-		{
-				if(arr_unity[ i ] != 1)		//all element
-				{
-						return false;		//must be 1
-				}
-		}
-		return true;
 }
 
-bool Sudoku::isCorrect()
+void Sudoku::Solve()
 {
-		bool check_result;
-		int check_arr[ 9 ];
-		int location;
-		for(int i = 0; i < 81; i += 9 )		//check rows
+		init();			//設定參數
+		sp = getBlank(-1);		//取得空白位置
+		do
 		{
-				for(int j = 0; j < 9; ++ j)
+				Read[ sp ] ++;		//將此位置數字+1慢慢測試
+				if(Read[ sp ] > 9)		//若此位置數字超過9則回溯
 				{
-						check_arr[ j ] = map[ i + j ];
+						Read[ sp ] = 0;
+						sp = pop();
 				}
-				check_result = checkUnity(check_arr);
-				if(check_result == false)
+				else
 				{
-						return false;
+						if(check( sp ) == 0)		//若同行列格皆無相同數字
+						{
+								push( sp );
+								sp = getBlank( sp );
+						}
 				}
 		}
-		for(int i = 0; i < 9; ++ i)		//check columns
+		while( sp >= 0 && sp < 144);
+		
+		for(i = 0; i < 144; i ++)
 		{
-				for(int j = 0; j < 9; ++ j)
+				cout << setw(3) << Read[ i ];
+				if( (i+1)%12 == 0 )
 				{
-						check_arr[ j ] = map[ i + 9*j ];
-				}
-				check_result = checkUnity(check_arr);
-				if(check_result == false)
-				{
-						return false;
+						cout << endl;
 				}
 		}
-		for(int i = 0; i < 9; ++ i)		//check cells
-		{
-				for(int j = 0; j < 9; ++ j)
-				{
-						location = 27*(i/3) + 3*(i%3) + 9*(j/3) + (j%3);
-						check_arr[ j ] = map[location];
-				}
-				check_result = checkUnity(check_arr);
-				if(check_result == false)
-				{
-						return false;
-				}
-		}
-		return true;
 }
-*/
+
+void Sudoku::init()
+{
+		for(i = 0; i < 144; i ++)
+		{
+				startH[ i ] = i/12*12;						//列位置起點座標
+				startV[ i ] = i%12;							//行位置起點座標
+				startB[ i ] = (i/12)/3*36 + (i%12)/3*3;			//格位置起點座標
+		}
+		for(i = 0; i < 12; i ++)
+		{
+				addH[ i ] = i;					//列位置座標增加值
+				addV[ i ] = 12*i;				//行位置座標增加值
+				addB[ i ] = (i/3)*12 + (i%3);	//格位置座標增加值
+		}
+		for(i = 9; i < 12; i ++)
+		{
+				addB[ i ] = 0;
+		}
+}
+int Sudoku::getBlank(int sp)
+{		//取得空白位置座標
+		do
+		{
+				sp ++;
+		}
+		while( sp < 144 && Read[ sp ] != 0);
+		return( sp );
+}
+
+int Sudoku::check(int sp)
+{		//檢查行列格是否有相同的數字
+		same = 0;
+		if(!same)
+		{
+				same = check1(sp, startH[ sp ], addH);		//檢查同列是否有相同數字
+		}
+		if(!same)
+		{
+				same = check1(sp, startV[ sp ], addV);		//檢查同行是否有相同數字
+		}
+		if(!same)
+		{
+				same = check1(sp, startB[ sp ], addB);		//檢查同格是否有相同數字
+		}
+		return( same );
+}
+
+
+
+
+int Sudoku::check1(int sp, int start, int *add)
+{		//檢查指定的行列格有沒有相同的數字
+		same = 0;
+		for(i = 0; i < 12; i ++)
+		{
+				sp1 = start + add[ i ];
+				if(sp != sp1 && Read[ sp ] == Read[ sp1 ] && Read[ sp ] != -1 && Read[ sp1 ] != -1 )
+				{		//檢查指定的行列格是否有相同數字
+						same ++;
+				}
+		}
+		return( same );
+}
+
+int Sudoku::push(int sp)
+{		//將指定的位置放入堆疊中
+		temp[ tempsp ++] = sp;
+}
+
+int Sudoku::pop()
+{		//取出堆疊中的上一個位置
+		if( tempsp <= 0)
+		{
+				return( -1 );
+		}
+		else
+		{
+				return( temp[ -- tempsp ]);
+		}
+}
