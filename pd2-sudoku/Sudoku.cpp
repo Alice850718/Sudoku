@@ -111,7 +111,7 @@ void Sudoku::GiveQuestion()
 				}
 		}
 
-
+		Question_arr[ 5 ][ 9 ] = 0;
 		//把題目印出來
 		for(i = 0; i < 12; i ++)
 		{
@@ -132,10 +132,11 @@ void Sudoku::ReadIn()
 		}
 }
 
-void Sudoku::Solve()
+int Sudoku::Solve()
 {
 		init();			//設定參數
-		sp = getBlank(-1);		//取得空白位置
+		tempsp = 0;
+		sp = getBlank( -1 );		//取得空白位置
 		do
 		{
 				Read[ sp ] ++;		//將此位置數字+1慢慢測試
@@ -148,14 +149,22 @@ void Sudoku::Solve()
 				{
 						if(check( sp ) == 0)		//若同行列格皆無相同數字
 						{
-								push( sp );
-								sp = getBlank( sp );
+								push( sp );			//記錄此次空格位置
+								sp = getBlank( sp );//取得下次空格位置
 						}
 				}
 		}
-		while( sp >= 0 && sp < 144);
+		while( sp >= 0 && sp < 144);		//直到每一格執行完
 		
-		for(i = 0; i < 144; i ++)
+		for(i = 0; i < 144; i ++)		//判斷是否為無解
+		{
+				if(Read[ i ] == 0 )
+				{
+						cout << 0 << endl;
+						return 0;		//若無解則結束程式
+				}
+		}
+		for(i = 0; i < 144; i ++)		//印出答案
 		{
 				cout << setw(3) << Read[ i ];
 				if( (i+1)%12 == 0 )
@@ -165,13 +174,13 @@ void Sudoku::Solve()
 		}
 }
 
-void Sudoku::init()
+void Sudoku::init()		//設定初值
 {
 		for(i = 0; i < 144; i ++)
 		{
-				startH[ i ] = i/12*12;						//列位置起點座標
-				startV[ i ] = i%12;							//行位置起點座標
-				startB[ i ] = (i/12)/3*36 + (i%12)/3*3;			//格位置起點座標
+				startH[ i ] = (i/12)*12;							//列位置起點座標
+				startV[ i ] = i%12;									//行位置起點座標
+				startB[ i ] = ((i/12)/3)*36 + ((i%12)/3)*3;			//格位置起點座標
 		}
 		for(i = 0; i < 12; i ++)
 		{
@@ -184,8 +193,8 @@ void Sudoku::init()
 				addB[ i ] = 0;
 		}
 }
-int Sudoku::getBlank(int sp)
-{		//取得空白位置座標
+int Sudoku::getBlank(int sp)		//取得空白位置座標
+{
 		do
 		{
 				sp ++;
@@ -194,8 +203,8 @@ int Sudoku::getBlank(int sp)
 		return( sp );
 }
 
-int Sudoku::check(int sp)
-{		//檢查行列格是否有相同的數字
+int Sudoku::check(int sp)		//檢查行列格是否有相同的數字
+{
 		same = 0;
 		if(!same)
 		{
@@ -212,30 +221,28 @@ int Sudoku::check(int sp)
 		return( same );
 }
 
-
-
-
-int Sudoku::check1(int sp, int start, int *add)
-{		//檢查指定的行列格有沒有相同的數字
+int Sudoku::check1(int sp, int start, int *add)		//檢查指定的行列格有沒有相同的數字
+{
 		same = 0;
 		for(i = 0; i < 12; i ++)
 		{
+
 				sp1 = start + add[ i ];
-				if(sp != sp1 && Read[ sp ] == Read[ sp1 ] && Read[ sp ] != -1 && Read[ sp1 ] != -1 )
-				{		//檢查指定的行列格是否有相同數字
+				if(sp != sp1 && Read[ sp ] == Read[ sp1 ] && Read[ sp ] != 0 )		//檢查指定的行列格是否有相同數字
+				{
 						same ++;
 				}
 		}
 		return( same );
 }
 
-int Sudoku::push(int sp)
-{		//將指定的位置放入堆疊中
+int Sudoku::push(int sp)		//紀錄此次空格位置
+{
 		temp[ tempsp ++] = sp;
 }
 
-int Sudoku::pop()
-{		//取出堆疊中的上一個位置
+int Sudoku::pop()		//取出上次空格位置
+{
 		if( tempsp <= 0)
 		{
 				return( -1 );
