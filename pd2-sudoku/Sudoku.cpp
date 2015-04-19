@@ -1,13 +1,12 @@
 #include <iostream>
 #include <iomanip>
 #include <cstdlib>
-#include <vector>
 #include "Sudoku.h"
 using namespace std;
 
 void Sudoku::GiveQuestion()
 {
-		int i, j, m, n = 0;		//幫助跑迴圈
+//		 i, j, m, n = 0;		//幫助跑迴圈
 		int o = -1;
 		int num[ 9 ];		//儲存隨機亂數
 		int set[ 9 ] = { 0 };		//計算歸零幾個
@@ -94,13 +93,13 @@ void Sudoku::GiveQuestion()
 		int seti[ 12 ] = { 0 };
 		int setj[ 12 ] = { 0 };
 
-		for(i = 0; i < 12; i ++)
+		for(i = 0; i < 12; i ++)		//抓空格(數字n抓取n-1個空格，但每行每列最多2空格)
 		{
 				for(j = 0; j < 12; j ++)
 				{
 						for(m = 1; m < 10; m ++)
 						{
-								if(Question_arr[ i ][ j ] == m && set[ m ] < m && seti[ i ] < 2 && setj[ j ] < 2)
+								if(Question_arr[ i ][ j ] == m && Question_arr[ i ][ j ] != -1 && set[ m ] < m && seti[ i ] < 2 && setj[ j ] < 2)
 								{
 										Question_arr[ i ][ j ] = 0;
 										set[ m ] ++;
@@ -111,9 +110,7 @@ void Sudoku::GiveQuestion()
 				}
 		}
 
-		Question_arr[ 5 ][ 9 ] = 0;
-		//把題目印出來
-		for(i = 0; i < 12; i ++)
+		for(i = 0; i < 12; i ++)		//把題目印出來
 		{
 				for(j = 0; j < 12; j++)
 						{
@@ -124,15 +121,19 @@ void Sudoku::GiveQuestion()
 }
 
 
-void Sudoku::ReadIn()
+void Sudoku::ReadIn()		//讀取輸入的數獨
 {
 		for(i = 0; i < 144; i ++)
 		{
 				cin >> Read[ i ];
 		}
+		for(i = 0; i < 144; i ++)		//多複製一個陣列來判斷是否為多重解
+		{
+				Read1[ i ] = Read[ i ];
+		}
 }
 
-int Sudoku::Solve()
+int Sudoku::Solve()		//解數獨
 {
 		init();			//設定參數
 		tempsp = 0;
@@ -164,14 +165,55 @@ int Sudoku::Solve()
 						return 0;		//若無解則結束程式
 				}
 		}
-		for(i = 0; i < 144; i ++)		//印出答案
+
+		//再解一次以判斷是否為多重解
+		init();
+		tempsp = 0;
+		sp = getBlank1( 144 );
+		do
 		{
-				cout << setw(3) << Read[ i ];
-				if( (i+1)%12 == 0 )
+				Read1[ sp ] ++;
+				if(Read1[ sp ] > 9)
 				{
-						cout << endl;
+						Read1[ sp ] = 0;
+						sp = pop();
+				}
+				else
+				{
+						if(check2( sp ) == 0)
+						{
+								push( sp );
+								sp = getBlank1( sp );
+						}
 				}
 		}
+		while( sp >= 0 && sp < 144);
+
+		same = 0;
+		for(i = 0; i < 144; i ++)
+		{
+				if(Read[ i ] != Read1[ i ])		//若第二組答案與第一組答案不同，則為多組解
+				{
+						same ++;
+				}
+		}
+
+		if(same == 0)		//唯一解(答案皆同)
+		{
+				cout << 1 << endl;		//印出1
+		}
+		else		//多組解(答案有異)
+		{
+				cout << 2 << endl;		//印出2
+		}
+				for(i = 0; i < 144; i ++)		//印出答案
+				{
+						cout << setw(3) << Read1[ i ];
+						if( (i+1)%12 == 0 )
+						{
+								cout << endl;
+						}
+				}
 }
 
 void Sudoku::init()		//設定初值
@@ -193,7 +235,7 @@ void Sudoku::init()		//設定初值
 				addB[ i ] = 0;
 		}
 }
-int Sudoku::getBlank(int sp)		//取得空白位置座標
+int Sudoku::getBlank(int sp)		//取得空白位置座標(從前面取)
 {
 		do
 		{
@@ -202,19 +244,27 @@ int Sudoku::getBlank(int sp)		//取得空白位置座標
 		while( sp < 144 && Read[ sp ] != 0);
 		return( sp );
 }
-
+int Sudoku::getBlank1(int sp)		//取得空白位置座標(從後面取)
+{
+		do
+		{
+				sp --;
+		}
+		while( sp >= 0 && Read1[ sp ] != 0);
+		return( sp );
+}
 int Sudoku::check(int sp)		//檢查行列格是否有相同的數字
 {
 		same = 0;
-		if(!same)
+		if(same == 0)
 		{
 				same = check1(sp, startH[ sp ], addH);		//檢查同列是否有相同數字
 		}
-		if(!same)
+		if(same == 0)
 		{
 				same = check1(sp, startV[ sp ], addV);		//檢查同行是否有相同數字
 		}
-		if(!same)
+		if(same == 0)
 		{
 				same = check1(sp, startB[ sp ], addB);		//檢查同格是否有相同數字
 		}
@@ -226,9 +276,40 @@ int Sudoku::check1(int sp, int start, int *add)		//檢查指定的行列格有�
 		same = 0;
 		for(i = 0; i < 12; i ++)
 		{
-
 				sp1 = start + add[ i ];
 				if(sp != sp1 && Read[ sp ] == Read[ sp1 ] && Read[ sp ] != 0 )		//檢查指定的行列格是否有相同數字
+				{
+						same ++;
+				}
+		}
+		return( same );
+}
+
+int Sudoku::check2(int sp)
+{
+		same = 0;
+		if(same == 0)
+		{
+				same = check3(sp, startH[ sp ], addH);
+		}
+		if(same == 0)
+		{
+				same = check3(sp, startV[ sp ], addV);
+		}
+		if(same == 0)
+		{
+				same = check3(sp, startB[ sp ], addB);
+		}
+		return( same );
+}
+		
+int Sudoku::check3(int sp, int start, int *add)
+{
+		same = 0;
+		for(i = 0; i < 12; i ++)
+		{
+				sp1 = start + add[ i ];
+				if(sp != sp1 && Read1[ sp ] == Read1[ sp1 ] && Read1[ sp ] != 0)
 				{
 						same ++;
 				}
