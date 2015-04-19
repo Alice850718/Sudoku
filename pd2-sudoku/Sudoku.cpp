@@ -201,11 +201,6 @@ int Sudoku::Solve()		//解數獨
 		if(same == 0)		//唯一解(答案皆同)
 		{
 				cout << 1 << endl;		//印出1
-		}
-		else		//多組解(答案有異)
-		{
-				cout << 2 << endl;		//印出2
-		}
 				for(i = 0; i < 144; i ++)		//印出答案
 				{
 						cout << setw(3) << Read1[ i ];
@@ -214,6 +209,12 @@ int Sudoku::Solve()		//解數獨
 								cout << endl;
 						}
 				}
+		}
+		else		//多組解(答案有異)
+		{
+				cout << 2 << endl;		//印出2
+				return 0;
+		}
 }
 
 void Sudoku::init()		//設定初值
