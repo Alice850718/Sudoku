@@ -1,0 +1,3 @@
+編譯方式:make
+執行方式:./give_question > newfile (出題目到newfile)
+		 ./solve < newdfile			(輸入題目)
