@@ -170,10 +170,11 @@ int Sudoku::Solve()		//解數獨
 		init();
 		tempsp = 0;
 		sp = getBlank1( 144 );
+		Read1[ sp ] = 10;
 		do
 		{
-				Read1[ sp ] ++;
-				if(Read1[ sp ] > 9)
+				Read1[ sp ] --;
+				if(Read1[ sp ] < 1)
 				{
 						Read1[ sp ] = 0;
 						sp = pop();
@@ -184,13 +185,14 @@ int Sudoku::Solve()		//解數獨
 						{
 								push( sp );
 								sp = getBlank1( sp );
+								Read1[ sp ] = 10;
 						}
 				}
 		}
 		while( sp >= 0 && sp < 144);
 
 		same = 0;
-		for(i = 0; i < 144; i ++)
+		for(i = 0; i < 143; i ++)
 		{
 				if(Read[ i ] != Read1[ i ])		//若第二組答案與第一組答案不同，則為多組解
 				{
